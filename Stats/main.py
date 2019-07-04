@@ -32,6 +32,7 @@ logging.basicConfig(filename='logs.log',
                     level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+
 def raiseIfNone(var):
     if var is None:
         raise Exception('Cannot be None')
@@ -91,6 +92,7 @@ def generateFromSeed(seed=None, varName=None, varValue=None):
             instance['matrix'][toNode['id']][fromNode['id']] = dist
 
     return instance
+
 
 def retrieveFromFile(fileName):
     instance = {
@@ -161,7 +163,7 @@ def generateStatsRandom(min, max, pas, varName, fileName):
     try:
         writer = csv.writer(file)
         writer.writerow(('Time', 'Result', 'MeanResult', 'ExpectedResult', 'CitiesCount', 'TrucksCount', 'Iterations', 'Temperature', 'Coef'))
-        
+
         for i in range(min, max, pas):
             instance = generateFromSeed(varName=varName, varValue=i)
 
@@ -171,7 +173,7 @@ def generateStatsRandom(min, max, pas, varName, fileName):
             coef = 0.95
 
             start_time = time.time()
-            
+
             weights = {}
             for demand in instance['nodes']:
                 weights[demand.get('id')] = int(demand.get('demand'))
@@ -183,12 +185,13 @@ def generateStatsRandom(min, max, pas, varName, fileName):
     finally:
         file.close()
 
+
 def generateStatsQuality(values, valueName, inputFile, outputFile):
     file = open(outputFile, "w+", newline='')
     try:
         writer = csv.writer(file)
         writer.writerow(('Time', 'Result', 'MeanResult', 'ExpectedResult', 'CitiesCount', 'TrucksCount', 'Iterations', 'Temperature', 'Coef'))
-        
+
         for i in values:
             instance = retrieveFromFile(inputFile)
 
@@ -205,7 +208,7 @@ def generateStatsQuality(values, valueName, inputFile, outputFile):
                 coef = i
 
             start_time = time.time()
-            
+
             weights = {}
             for demand in instance['nodes']:
                 weights[demand.get('id')] = int(demand.get('demand'))
@@ -228,7 +231,7 @@ def main():
     generateStatsQuality([1, 2, 5, 10], 'temperature', '../input0.txt', dirName + '/temperature.csv')
     generateStatsQuality([10000, 100000, 1000000], 'iterations', '../input0.txt', dirName + '/iterations.csv')
     generateStatsQuality([0.9, 0.95, 0.975, 0.99, 0.999], 'coef', '../input0.txt', dirName + '/coef.csv')
-    
+
 
 if __name__ == "__main__":
     main()

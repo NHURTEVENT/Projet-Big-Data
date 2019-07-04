@@ -1,5 +1,6 @@
 import matplotlib
 import numpy as np
+import matplotlib.animation
 import matplotlib.pyplot as plt
 import random
 import math
@@ -35,26 +36,19 @@ def swap1(paths):
 def printError(x):
     print("random out of bound")
 
+
 def f(x, matrice):
     total_sum = 0
-    for cycle in x :
-        #print("cycle : "+ str(cycle))
+    for cycle in x:
         cycle_sum = 0
-        if(len(cycle)>0) :
-            #print(range(0,len(cycle)))
-            for i in range(0,len(cycle)) :
-                if i == 0 :
+        if len(cycle) > 0:
+            for i in range(0, len(cycle)):
+                if i == 0:
                     cycle_sum += matrice[cycle[i]][0]
-                    #print("0 to node "+ str(cycle[i])+" : "+ str(matrice[cycle[i]][0]))
-                else :
+                else:
                     cycle_sum += matrice[cycle[i]][cycle[i-1]]
-                    #print("node "+str(cycle[i-1])+" to node "+str(cycle[i])+" : "+str(matrice[cycle[i]][cycle[i-1]]))
-
-            #print("node "+ str(cycle[len(cycle)-1])+" to 0 : "+ str(matrice[cycle[len(cycle)-1]][0]))
             cycle_sum += matrice[cycle[len(cycle)-1]][0]
-            #print("cycle sum "+ str(cycle_sum))
             total_sum += cycle_sum
-    #print("total sum "+str(total_sum))
     return total_sum
 
 
@@ -64,14 +58,12 @@ def matriceToGraph(matrice):
     for i in range(len(matrice)):
         myGraph4.add_node(i)
 
-    for i in range(len(matrice)) :
-        for j in range(len(matrice)) :
-            if(i>j) :
-                #print(matrice[i][j])
-                myGraph4.add_edge(i,j,weight=matrice[i][j])
+    for i in range(len(matrice)):
+        for j in range(len(matrice)):
+            if i > j:
+                myGraph4.add_edge(i, j, weight=matrice[i][j])
 
     return myGraph4
-
 
 
 def convertPaths(paths):
@@ -80,23 +72,18 @@ def convertPaths(paths):
         newPath = []
         for cycle in path:
             cycle2 = []
-            for node in cycle :
+            for node in cycle:
                 cycle2.append(str(node))
             newPath.append(cycle2)
-        #print("new path"+ str(newPath))
         newPaths.append(newPath)
     return newPaths
 
-import networkx as nx
-import numpy as np
-import matplotlib.pyplot as plt
-#import seaborn.apionly as sns
-import matplotlib.animation
 
 fig, ax = plt.subplots(figsize=(7, 4))
 G = None
 pos = []
 paths = []
+
 
 def update(num):
     print("fig " + str(fig))
@@ -105,20 +92,13 @@ def update(num):
     i = num // 3
     j = num % 3 + 1
 
-    # cycles = paths[donePathNumber]
-
     newPaths = convertPaths(paths)
     cycles = newPaths[num]
     print(cycles)
     colors = ["red", "blue", "green", "black", "orange", "purple", "yellow", "brown"]
     index = 0
     for path in cycles:
-        # Query nodes
-        # set_edgecolor(colors[index%len(colors)])
-        # set_edgecolor("red")
-
         index += 1
-        print("path " + str(path))
         query_nodes = nx.draw_networkx_nodes(G, pos=pos, nodelist=path, ax=ax)
         query_nodes.set_edgecolor("blue")
         nx.draw_networkx_labels(G, pos=pos, labels=dict(zip(path, path)), font_color="white", ax=ax)
@@ -126,7 +106,6 @@ def update(num):
         print("edge list" + str(edgelist))
         edges = nx.draw_networkx_edges(G, pos=pos, edgelist=edgelist, width=3, ax=ax)
         edges.set_edgecolor(colors[index % len(colors)])
-        # edges.set_edgecolor("red")
 
     # Scale plot ax
     ax.set_title("Frame %d:    " % (num + 1) + str(cycles), fontweight="bold")
@@ -134,26 +113,14 @@ def update(num):
     ax.set_yticks([])
 
 
-# test(1)
-
-
-# capaciteMax = 100
-# allItems = {0:0,1:5,2:18,3:6,4:15,5:20,6:8,7:15,8:20,9:13}#, 10:21,11:25}
-# print(allItems)
-
 def getAllSwappableItems(currentPaths, capaciteMax, allItems):
-    # print("current paths:" + str(currentPaths))
     # if not all full, verif plus peit poid swap possible
     full = True
     allMovesAvailable = []
     truckId = 1
     for cycle in currentPaths:
         truckWeight = 0
-        # print("cycles"+ str(cycles))
         available = []
-        # for cycle in cycles:
-
-        # print("truck "+ str(truckId)+" " + str(cycle))
         for node in cycle:
             if (node == 0):
                 continue
@@ -311,34 +278,24 @@ def swap2(paths, allItems):
     path1[rand1], path1[rand2] = path1[rand2], path1[rand1]
 
     paths[path1index] = path1
-
-    # print(path1)
-    # print(path2)
-    # print("swaped extra")
     return paths
 
+
 def switchAction(x):
-    # print("x "+ str(x))
     switcher = {
         1: swapExtraCVRP,
         2: swap2
 
     }
-    # print("xx "+ str(x))
     return switcher.get(x, printError)
-
 
 
 def recuitCVRPGraph(matrice, allItems, k, capaciteMax, t, coef, n):
     paths = []
     current_optimum = 1000000000
-    # xstart = np.array_split(range(1,len(matrice),1),k)
     xstart = splitClients(allItems, k, capaciteMax)
     xc = np.array(xstart)
-    #print("xstart" + str(xstart))
-    # print(xc)
     xc = xc.tolist()
-    # print(xc)
 
     na = 0
     results = []
@@ -365,7 +322,8 @@ def recuitCVRPGraph(matrice, allItems, k, capaciteMax, t, coef, n):
 
         DeltaE = abs(totalCost - current_optimum)
         if (totalCost > current_optimum):
-            if (n == 0): DeltaE_avg = DeltaE
+            if n == 0:
+                DeltaE_avg = DeltaE
             # objective function is worse
             # generate probability of acceptance
             p = math.exp(-DeltaE / (DeltaE_avg * t))
@@ -380,7 +338,7 @@ def recuitCVRPGraph(matrice, allItems, k, capaciteMax, t, coef, n):
         else:
             # objective function is lower, automatically accept
             accept = True
-        if (accept == True):
+        if accept is True:
             # update currently accepted solution
             xc = xi
             current_optimum = totalCost
@@ -405,18 +363,9 @@ def recuitCVRPGraph(matrice, allItems, k, capaciteMax, t, coef, n):
             DeltaE_avg = (DeltaE_avg * (na - 1.0) + DeltaE) / na
         allresults.append(totalCost)
         t = coef * t
-        # print("iter")
 
-    #print(current_optimum)
-    #print(optimal_path)
-    mean_cost = sum(allresults)/ len(allresults)
-
-     #return paths, results, allresults
+    mean_cost = sum(allresults) / len(allresults)
     return current_optimum, mean_cost, results, allresults
-
-
-
-
 
 
 def splitClients(allItems, k, capaciteMax):
@@ -425,7 +374,7 @@ def splitClients(allItems, k, capaciteMax):
     totalWeight = 0
 
     # print("allItems" + str(allItems))
-    #print(allItems)
+    # print(allItems)
     for itemIndex in allItems:
         totalWeight += allItems[itemIndex]
 
@@ -467,153 +416,3 @@ def splitClients(allItems, k, capaciteMax):
         splitList.append(currentTruck)
 
     return splitList
-
-
-# allItems = {0:0,1:5,2:18,3:6,4:15,5:20,6:8,7:15,8:20,9:13}
-#allItems = {0: 0, 1: 24, 2: 18, 3: 30, 4: 45, 5: 20, 6: 12, 7: 15, 8: 20, 9: 13}  # , 10:21,11:25}
-
-#test = splitClients(allItems, 7, 50)
-#print("test" + str(test))
-
-
-# from parse import parse
-# from math import hypot
-
-# fileName = "input.txt"
-
-
-# def parseFile(fileName):
-#     instance = {
-#         'nodes': list()
-#     }
-
-#     citiesCount = None
-
-#     with open(fileName, 'rt') as myFile:
-#         python_ne_sait_pas_faire_des_iterators_section = 0
-
-#         for line in myFile.readlines():
-#             if line.startswith("NAME : "):
-#                 instance['name'] = parse('NAME : {}', line)[0]
-#             elif line.startswith("COMMENT : "):
-#                 temp, instance['trucksCount'], instance['optimalValue'] = parse(
-#                     'COMMENT : {} No of trucks: {}, Optimal value: {})', line)
-#             elif line.startswith("TYPE : "):
-#                 continue
-#             elif line.startswith("DIMENSION : "):
-#                 citiesCount = int(parse('DIMENSION : {}', line)[0])
-#             elif line.startswith("EDGE_WEIGHT_TYPE : "):
-#                 continue
-#             elif line.startswith("CAPACITY : "):
-#                 instance['trucksCapacity'] = int(parse('CAPACITY : {}', line)[0])
-#             elif line.startswith("NODE_COORD_SECTION "):
-#                 python_ne_sait_pas_faire_des_iterators_section = 1
-#                 continue
-#             elif line.startswith("DEMAND_SECTION "):
-#                 python_ne_sait_pas_faire_des_iterators_section = 2
-#                 continue
-#             elif line.startswith("DEPOT_SECTION "):
-#                 python_ne_sait_pas_faire_des_iterators_section = 3
-#                 continue
-
-#             # ni des switch...
-#             if python_ne_sait_pas_faire_des_iterators_section == 1:
-#                 id, x, y = parse(' {} {} {}', line)
-#                 instance['nodes'].append({'id': int(id) - 1, 'x': int(x), 'y': int(y)})
-#             elif python_ne_sait_pas_faire_des_iterators_section == 2:
-#                 id, demand = parse('{} {}', line)
-#                 instance['nodes'][int(id) - 1]['demand'] = demand[:-1]
-#             elif python_ne_sait_pas_faire_des_iterators_section == 3:
-#                 instance['depotNodeId'] = int(parse(' {}', line)[0])
-#                 break;
-
-#     if citiesCount is None:
-#         raise Exception('CitiesCount cannot be None, verify that the input file as a valid format')
-
-#     instance['matrix'] = [[0] * citiesCount for i in range(citiesCount)]
-#     # print(citiesCount)
-
-#     for fromNode in instance['nodes']:
-#         for toNode in instance['nodes'][fromNode['id']:citiesCount]:
-#             dist = int(hypot(toNode['x'] - fromNode['x'], toNode['y'] - fromNode['y']))
-#             instance['matrix'][fromNode['id']][toNode['id']] = dist
-#             instance['matrix'][toNode['id']][fromNode['id']] = dist
-
-#     # print(instance)
-#     # print("")
-#     matrix = instance['matrix']
-#     truckCapacity = int(instance['trucksCapacity'])
-#     truckCount = int(instance['trucksCount'])
-#     # print("")
-#     # print(instance['nodes'])
-
-#     weights = {}
-
-#     for demand in instance['nodes']:
-#         weights[demand.get('id')] = int(demand.get('demand'))
-
-#     # print(weights)
-
-#     print(matrix)
-
-#     return weights, matrix, truckCount, truckCapacity
-
-
-#parseFile(fileName)
-
-
-
-
-
-#fileName = "input1.txt"
-#allItems, myMatrice, truckCount, truckCapacity = parseFile(fileName)
-
-
-#myMatrice = matrice2
-#allItems = {0:0,1:24,2:18,3:30,4:45,5:20,6:12,7:15,8:20,9:13}#, 10:21,11:25}
-#truckCapacity = 50
-#truckCount = 5
-
-
-#paths, results, allResults = recuitCVRPGraph(myMatrice, allItems, truckCount, truckCapacity, 10, 0.95, 100000)
-
-
-#paths, myresults, allmyresults = recuitCVRPGraph(myMatrice, allItems, truckCount, truckCapacity, 10, 0.95, 10000)
-#current_optimum, mean, myresults, allmyresults = recuitCVRPGraph(myMatrice,allItems,truckCount,truckCapacity,10,0.95,10000)
-
-#print(current_optimum)
-#print(mean)
-
-
-#print("done")
-
-
-# plt.subplot(121)
-# plt.plot(range(len(myresults)),myresults)
-# #plt.plot(range(len(myresults)),myresults)
-# '''
-# print("idc")
-# G = matriceToGraph(myMatrice)
-# labels2 = {}
-# for i in G.nodes():
-#     labels2[i]= str(i)
-# G = nx.relabel_nodes(G, labels2)
-# pos = nx.spring_layout(G)
-# fig, ax = plt.subplots(figsize=(7,4))
-# '''
-# fig, ax = plt.subplots(figsize=(7,4))
-# plt.plot(range(len(myresults)),myresults)
-# plt.plot(range(len(allmyresults)),allmyresults)
-
-
-#fig2 = plt.figure()
-
-#ax = fig2.add_subplot(1,1,1)
-
-#update(1)
-
-#ani = matplotlib.animation.FuncAnimation(fig, update, frames=len(paths), interval=5, repeat=False)
-#plt.show()
-#'''
-#return ani
-#plotGraph(paths)

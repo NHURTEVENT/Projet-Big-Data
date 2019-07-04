@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib import pylab
 from scipy import stats
 
+
 def calculateLinearRegression(xvalues, yvalues, xaxistitle, yaxistitle, windowTitle):
     xvalues = np.array(xvalues)
 
@@ -17,7 +18,7 @@ def calculateLinearRegression(xvalues, yvalues, xaxistitle, yaxistitle, windowTi
     plt.plot(xvalues, yvalues, 'o', xvalues, line)
     plt.xlabel(xaxistitle)
     plt.ylabel(yaxistitle)
-    #pylab.title(windowTitle)
+    # pylab.title(windowTitle)
 
     return slope, intercept
 
@@ -34,9 +35,10 @@ def retrieveStatsFromFile(fileName):
         file.close()
     return data
 
+
 def main():
     RESULTS_DIRECTORY = 'Results/'
-    
+
     data = retrieveStatsFromFile(RESULTS_DIRECTORY + 'cities.csv')
     plt.subplot(321)
     calculateLinearRegression([int(x[4]) for x in data], [float(x[0]) for x in data], 'Nb of cities', 'time (s)', 'Nb of cities / Time (s)')
@@ -69,7 +71,7 @@ def main():
     plt.subplot(326)
     x = np.linspace(-5, 5, 100)
     y = (temperatureSlope + coefSlope) / 2 * x + (temperatureIntercept + coefSlope) / 2
-    plt.plot(x, y, '-r') 
+    plt.plot(x, y, '-r')
 
     plt.subplots_adjust(bottom=8, top=10, left=3, right=5)
     plt.show()
