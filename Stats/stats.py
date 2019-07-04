@@ -31,9 +31,9 @@ def retrieveStatsFromFile(fileName):
     return data
 
 def main():
-    fileName = "20190704-002519.csv"
+    fileName = "20190704-085418.csv"
     data = retrieveStatsFromFile(fileName)
-    
+
     calculateLinearRegression([int(x[3]) for x in data],[float(x[0]) for x in data], '')
 
 if __name__ == "__main__":
