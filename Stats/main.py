@@ -160,7 +160,7 @@ def generateStatsRandom(min, max, pas, varName, fileName):
     file = open(fileName, "w+", newline='')
     try:
         writer = csv.writer(file)
-        writer.writerow(('Time', 'Result', 'ExpectedResult', 'MeanResult', 'CitiesCount', 'TrucksCount', 'Iterations', 'Temperature', 'Coef'))
+        writer.writerow(('Time', 'Result', 'MeanResult', 'ExpectedResult', 'CitiesCount', 'TrucksCount', 'Iterations', 'Temperature', 'Coef'))
         
         for i in range(min, max, pas):
             instance = generateFromSeed(varName=varName, varValue=i)
@@ -187,7 +187,7 @@ def generateStatsQuality(values, valueName, inputFile, outputFile):
     file = open(outputFile, "w+", newline='')
     try:
         writer = csv.writer(file)
-        writer.writerow(('Time', 'Result', 'ExpectedResult', 'MeanResult', 'CitiesCount', 'TrucksCount', 'Iterations', 'Temperature', 'Coef'))
+        writer.writerow(('Time', 'Result', 'MeanResult', 'ExpectedResult', 'CitiesCount', 'TrucksCount', 'Iterations', 'Temperature', 'Coef'))
         
         for i in values:
             instance = retrieveFromFile(inputFile)
