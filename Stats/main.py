@@ -15,8 +15,8 @@ MAX_NB_OF_TRUCKS = 5
 MIN_TRUCK_CAPACITY = 1000
 MAX_TRUCK_CAPACITY = 1000
 
-MIN_NB_OF_NODES = 1000
-MAX_NB_OF_NODES = 1000
+MIN_NB_OF_NODES = 100
+MAX_NB_OF_NODES = 100
 
 MIN_NODE_Y = 0
 MAX_NODE_Y = 100
@@ -183,7 +183,7 @@ def generateStatsRandom(min, max, pas, varName, fileName):
     finally:
         file.close()
 
-def generateStatsQuality(valueName, values, inputFile, outputFile):
+def generateStatsQuality(values, valueName, inputFile, outputFile):
     file = open(outputFile, "w+", newline='')
     try:
         writer = csv.writer(file)
@@ -225,9 +225,9 @@ def main():
 
     generateStatsRandom(10, 2000, 100, 'citiesCount', dirName + '/cities.csv')
     generateStatsRandom(6, 30, 1, 'trucksCount', dirName + '/trucks.csv')
-    generateStatsQuality([1, 2, 5, 10], '../input0.txt', dirName + '/temperature.csv')
-    generateStatsQuality([10000, 1000000, 1000000], '../input0.txt', dirName + '/iterations.csv')
-    generateStatsQuality([0.9, 0.95, 0.975, 0.99, 0.999], '../input0.txt', dirName + '/coef.csv')
+    generateStatsQuality([1, 2, 5, 10], 'temperature', '../input0.txt', dirName + '/temperature.csv')
+    generateStatsQuality([10000, 100000, 1000000], 'iterations', '../input0.txt', dirName + '/iterations.csv')
+    generateStatsQuality([0.9, 0.95, 0.975, 0.99, 0.999], 'coef', '../input0.txt', dirName + '/coef.csv')
     
 
 if __name__ == "__main__":
